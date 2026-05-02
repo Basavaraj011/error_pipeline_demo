@@ -40,9 +40,14 @@ jobs:
       
       - name: Set Jira Status
         run: |
-          if [ "${{ github.event_name }}" = "pull_request_review" ] && [ "${{ github.event.review.state }}" = "approved" ]; then
+          EVENT_NAME="${{ github.event_name }}"
+          REVIEW_STATE="${{ github.event.review.state }}"
+          MERGED="${{ github.event.pull_request.merged }}"
+          STATE="${{ github.event.pull_request.state }}"
+
+          if [ "$EVENT_NAME" = "pull_request_review" ] && [ "$REVIEW_STATE" = "approved" ]; then
             echo "TICKET_STATUS=Review" >> $GITHUB_ENV
-          elif [ "${{ github.event.pull_request.merged }}" = "true" ]; then
+          elif [ "$MERGED" = "true" ]; then
             echo "TICKET_STATUS=Done" >> $GITHUB_ENV
           else
             echo "TICKET_STATUS=In Progress" >> $GITHUB_ENV
