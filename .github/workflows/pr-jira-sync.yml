@@ -1,0 +1,39 @@
+name: PR Metadata Workflow
+
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  pr-metadata:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Print PR metadata
+        run: |
+          echo "PR Number: ${{ github.event.pull_request.number }}"
+          echo "PR Title: ${{ github.event.pull_request.title }}"
+          echo "PR Description: ${{ github.event.pull_request.body }}"
+          echo "Source Branch: ${{ github.head_ref }}"
+          echo "Target Branch: ${{ github.base_ref }}"
+          echo "PR Author: ${{ github.event.pull_request.user.login }}"
+          echo "Is Merged: ${{ github.event.pull_request.merged }}"
+
+      - name: Extract Jira Key
+        run: |
+          echo "JIRA_KEY=$(echo '${{ github.head_ref }}' | grep -oE '[A-Z]+-[0-9]+')" >> $GITHUB_ENV
+
+      - name: Show Jira Key
+        run: |
+          echo "Jira Issue Key: $JIRA_KEY"
+
+      # Example: run only when PR is merged
+      # - name: Run Jira update (on merge only)
+      #   if: github.event.pull_request.merged == true
+      #   run: |
+      #     echo "PR merged, update Jira here"
+      #     # python scripts/update_jira.py
