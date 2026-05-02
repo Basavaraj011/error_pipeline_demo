@@ -29,7 +29,7 @@ jobs:
 
       - name: Show Jira Key
         run: |
-          echo "Jira Issue Key: $JIRA_KEY"
+          echo "Jira Issue Key: $JIRA_KEY" 
 
       # Example: run only when PR is merged
       # - name: Run Jira update (on merge only)
