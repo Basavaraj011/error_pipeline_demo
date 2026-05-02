@@ -20,6 +20,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Checkout pr-jira-sync repo
+        uses: actions/checkout@v4
+        with:
+          repository: Basavaraj011/pr-jira-sync
+          ref: main
+          path: pr-jira-sync
+
       - name: Print PR metadata
         run: |
           echo "PR Number: ${{ github.event.pull_request.number }}"
@@ -52,3 +59,10 @@ jobs:
         run: |
           echo "JIRA_KEY : $JIRA_KEY"
           echo "TICKET_STATUS : $TICKET_STATUS"
+
+      - name: Update Jira ticket
+        env:
+          JIRA_KEY: ${{ env.JIRA_KEY }}
+          TICKET_STATUS: ${{ env.TICKET_STATUS }}
+        run: |
+          python pr-jira-sync/scripts/jira_ticket_status_updater.py
