@@ -47,8 +47,8 @@ jobs:
           else
             echo "TICKET_STATUS=In Progress" >> $GITHUB_ENV
           fi
-          
+
       - name: Debug Vars
         run: |
-          echo "JIRA_KEY is $JIRA_KEY"
-          echo "TICKET_STATUS is $TICKET_STATUS"
+          echo "JIRA_KEY : $JIRA_KEY"
+          echo "TICKET_STATUS : $TICKET_STATUS"
