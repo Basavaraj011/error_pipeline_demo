@@ -65,5 +65,4 @@ jobs:
           JIRA_KEY: ${{ env.JIRA_KEY }}
           TICKET_STATUS: ${{ env.TICKET_STATUS }}
         run: |
-          # python pr-jira-sync/scripts/jira_ticket_status_updater.py
-          ls -la
+          python pr-jira-sync/scripts/jira_ticket_status_updater.py
