@@ -73,4 +73,3 @@ jobs:
           TICKET_STATUS: ${{ env.TICKET_STATUS }}
         run: |
           python pr-jira-sync/scripts/jira_ticket_status_updater.py
-
