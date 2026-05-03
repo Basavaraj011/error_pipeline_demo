@@ -1,4 +1,4 @@
-name: PR Metadata Workflow
+name: PR - Jira Sync workflow
 
 on:
   pull_request:
@@ -26,13 +26,19 @@ jobs:
           repository: Basavaraj011/pr-jira-sync
           ref: main
           path: pr-jira-sync
+ 
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('pr-jira-sync/requirements.txt') }}
+          restore-keys: |
+            pip-${{ runner.os }}-
 
-      - name: Debug workspace
+      - name: Install pr-jira-sync dependencies
         run: |
-          pwd
-          ls -la
-          ls -la pr-jira-sync
-          ls -la pr-jira-sync/scripts
+          python -m pip install --upgrade pip
+          pip install -r pr-jira-sync/requirements.txt
 
       - name: Print PR metadata
         run: |
@@ -73,4 +79,3 @@ jobs:
           TICKET_STATUS: ${{ env.TICKET_STATUS }}
         run: |
           python pr-jira-sync/scripts/jira_ticket_status_updater.py
-
