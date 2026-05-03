@@ -27,6 +27,13 @@ jobs:
           ref: main
           path: pr-jira-sync
 
+      - name: Debug workspace
+        run: |
+          pwd
+          ls -la
+          ls -la pr-jira-sync
+          ls -la pr-jira-sync/scripts
+
       - name: Print PR metadata
         run: |
           echo "PR Number: ${{ github.event.pull_request.number }}"
