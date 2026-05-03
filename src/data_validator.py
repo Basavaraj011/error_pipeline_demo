@@ -4,7 +4,7 @@ from utils import log_message
 def validate_data(data):
 
 
-    valid = []
+    valid = [] 
 
     for record in data:
 
