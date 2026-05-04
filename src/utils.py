@@ -1,3 +1,4 @@
+src/utils.py
 import datetime
 
 
@@ -14,12 +15,10 @@ def log_message(msg):
 
 def calculate_bonus(score):
 
-    # BUG: multiplying int by string
-    # e.g. 50 * "1.5" -> "1.51.51.5..." (string)
-    bonus = score * bonus_factor
+    # Ensure bonus_factor is a float for correct multiplication
+    bonus = score * float(bonus_factor)
     print("Bonus:", bonus)
     return bonus
-
 
 def safe_divide(a, b):
 
@@ -50,3 +49,4 @@ def calculate_average(values):
         total += v
 
     return total / len(values)
+
