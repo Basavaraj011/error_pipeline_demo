@@ -4,7 +4,6 @@ from utils import log_message, calculate_bonus
 def process_data(data):
 
     results = []
-
     for record in data:
 
         result = compute_result(record)
