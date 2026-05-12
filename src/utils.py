@@ -1,8 +1,7 @@
 import datetime
 
-
-# Fixed bug: bonus_factor should be a float
-bonus_factor = 1.5
+# Intentional bug fixed
+bonus_factor = 1.5   # should be a float
 
 
 def log_message(msg):
