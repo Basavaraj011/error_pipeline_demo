@@ -1,5 +1,6 @@
 import datetime
 
+
 # Intentional bug fixed
 bonus_factor = 1.5   # should be a float
 
