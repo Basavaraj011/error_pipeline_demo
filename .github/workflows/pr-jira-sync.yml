@@ -17,16 +17,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Call PR Processor
         run: |
           echo "Triggering PR: ${{ github.event.pull_request.number }}"
           curl -X POST https://marketably-untraveled-helga.ngrok-free.dev:3978/pr/process \
             -H "Content-Type: application/json" \
-            -d '{
-              "pull_request": {
-                "number": ${{ github.event.pull_request.number }}
-              }
-            }'
+            -d "{\"pull_request\": {\"number\": ${{ github.event.pull_request.number }} }}"
+
             
       - name: Checkout repo
         uses: actions/checkout@v4
