@@ -3,13 +3,7 @@ name: PR - Jira Sync workflow
 on:
   pull_request:
     types:
-      - opened
-      - reopened
       - closed
-      - ready_for_review
-  pull_request_review:
-    types:
-      - submitted
 
 
 jobs:
