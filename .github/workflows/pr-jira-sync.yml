@@ -3,13 +3,7 @@ name: PR - Jira Sync workflow
 on:
   pull_request:
     types:
-      - opened
-      - reopened
       - closed
-      - ready_for_review
-  pull_request_review:
-    types:
-      - submitted
 
 
 jobs:
@@ -17,6 +11,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Call PR Processor
+        run: |
+          echo "Triggering PR: ${{ github.event.pull_request.number }}"
+          curl -X POST https://marketably-untraveled-helga.ngrok-free.dev/pr/process \
+            -H "Content-Type: application/json" \
+            -d "{\"pull_request\": {\"number\": ${{ github.event.pull_request.number }} }}" \
+            -v
+
+            
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -60,12 +64,8 @@ jobs:
       
       - name: Set Jira Status
         run: |
-          if [ "${{ github.event_name }}" = "pull_request_review" ] && [ "${{ github.event.review.state }}" = "approved" ]; then
-            echo "TICKET_STATUS=Review" >> $GITHUB_ENV
-          elif [ "${{ github.event.pull_request.merged }}" = "true" ]; then
+          if [ "${{ github.event.pull_request.merged }}" = "true" ]; then
             echo "TICKET_STATUS=Done" >> $GITHUB_ENV
-          else
-            echo "TICKET_STATUS=In Progress" >> $GITHUB_ENV
           fi
 
       - name: Debug Vars
