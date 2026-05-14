@@ -72,8 +72,6 @@ jobs:
         run: |
           if [ "${{ github.event.pull_request.merged }}" = "true" ]; then
             echo "TICKET_STATUS=Done" >> $GITHUB_ENV
-          elif [ "${{ github.event.pull_request.state }}" = "closed" ]; then
-            echo "TICKET_STATUS=In Progress" >> $GITHUB_ENV
           fi
 
       - name: Debug Vars
