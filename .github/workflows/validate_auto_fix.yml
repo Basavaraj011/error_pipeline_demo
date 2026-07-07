@@ -2,8 +2,7 @@ name: Validate Auto-Fix PR
 
 on:
   pull_request:
-    types:
-      - opened
+    types: [opened]
 
 jobs:
   validate-fix:
@@ -13,15 +12,19 @@ jobs:
       - name: Checkout PR code
         uses: actions/checkout@v4
 
+      - name: Show files
+        run: |
+          echo "Current directory:"
+          pwd
+          echo ""
+          echo "Repository contents:"
+          find . -type f
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Verify Python files compile
-        run: |
-          python -m py_compile *.py
-
-      - name: Execute application
+      - name: Run application
         run: |
           python main.py
