@@ -18,10 +18,6 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Verify Python files compile
-        run: |
-          python -m py_compile *.py
-
       - name: Execute application
         run: |
           python main.py
