@@ -36,9 +36,9 @@ def normalize_record(record):
 
     new_record = {}
 
-    new_record["id"] = int(record["id"])
+    new_record["id"] = record["id"]
     new_record["name"] = record["name"].strip().lower()
-    new_record["score"] = int(record["score"])
+    new_record["score"] = float(record["score"])
 
     return new_record
 
