@@ -31,17 +31,27 @@ jobs:
             repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }} \
             --jq '.pull_requests[0].number')
 
-          TITLE=$(gh pr view $PR_NUMBER --json title --jq '.title')
+          TITLE=$(gh api \
+            repos/${{ github.repository }}/pulls/$PR_NUMBER \
+            --jq '.title')
 
           ERROR_ID=$(echo "$TITLE" | grep -oP '\[E_ID:\s*\K\d+(?=\])')
 
-          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
-          echo "error_id=$ERROR_ID" >> $GITHUB_OUTPUT
+          if [ -z "$ERROR_ID" ]; then
+            echo "Failed to extract ERROR_ID from title: $TITLE"
+            exit 1
+          fi
+
+          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "error_id=$ERROR_ID" >> "$GITHUB_OUTPUT"
 
           echo "PR_NUMBER=$PR_NUMBER"
+          echo "TITLE=$TITLE"
           echo "ERROR_ID=$ERROR_ID"
 
       - name: Invoke Self-Heal Retry
+        env:
+          LAMBDA_ENDPOINT: ${{ secrets.LAMBDA_ENDPOINT }}
         run: |
           cat > payload.json <<EOF
           {
@@ -51,6 +61,7 @@ jobs:
           }
           EOF
 
+          echo "Payload:"
           cat payload.json
 
           curl -X POST "$LAMBDA_ENDPOINT" \
