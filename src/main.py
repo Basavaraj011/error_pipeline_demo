@@ -7,7 +7,6 @@ from utils import log_message
 
 
 def run_pipeline():
-
     data = load_data("data.txt")
 
     valid_data = validate_data(data)
@@ -28,7 +27,8 @@ def main():
 
         print("\nPipeline crashed!\n")
 
-        traceback.print_exc()   # <-- this prints the full stack trace
+        traceback.print_exc()
+        sys.exit(1)
 
 
 if __name__ == "__main__":
