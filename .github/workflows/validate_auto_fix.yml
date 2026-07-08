@@ -1,36 +1,58 @@
-name: Validate Auto-Fix PR
+name: Self Heal Retry
 
 on:
-  pull_request:
+  workflow_run:
+    workflows:
+      - Validate Auto-Fix PR
     types:
-      - opened
-      - synchronize
-      - reopened
+      - completed
+
+env:
+  MAX_RETRIES: 3
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: read
 
 jobs:
-  validate-fix:
+  retry:
+    if: github.event.workflow_run.conclusion == 'failure'
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout PR Code
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Compile Python Files
+      - name: Get PR Details
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python -m compileall src > validation.log 2>&1
+          PR_NUMBER=$(gh api \
+            repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }} \
+            --jq '.pull_requests[0].number')
 
-      - name: Run Pipeline
+          TITLE=$(gh pr view $PR_NUMBER --json title --jq '.title')
+
+          ERROR_ID=$(echo "$TITLE" | grep -oP '\[E_ID:\s*\K\d+(?=\])')
+
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "error_id=$ERROR_ID" >> $GITHUB_OUTPUT
+
+          echo "PR_NUMBER=$PR_NUMBER"
+          echo "ERROR_ID=$ERROR_ID"
+
+      - name: Invoke Self-Heal Retry
         run: |
-          python src/main.py >> validation.log 2>&1
+          cat > payload.json <<EOF
+          {
+            "error_id": "${{ steps.pr.outputs.error_id }}",
+            "pr_number": "${{ steps.pr.outputs.pr_number }}",
+            "retry_limit": "${{ env.MAX_RETRIES }}"
+          }
+          EOF
 
-      - name: Upload Validation Logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: validation-logs
-          path: validation.log
+          cat payload.json
+
+          curl -X POST "$LAMBDA_ENDPOINT" \
+            -H "Content-Type: application/json" \
+            -d @payload.json
