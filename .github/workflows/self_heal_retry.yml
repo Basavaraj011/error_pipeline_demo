@@ -9,11 +9,13 @@ on:
 
 env:
   MAX_RETRIES: 3
+  AWS_REGION: us-east-1
 
 permissions:
-  actions: read
+  id-token: write      # Required for OIDC
   contents: read
   pull-requests: read
+  actions: read
 
 jobs:
   retry:
@@ -22,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get PR Details
+      - name: Extract PR Details
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,21 +51,33 @@ jobs:
           echo "TITLE=$TITLE"
           echo "ERROR_ID=$ERROR_ID"
 
-      - name: Invoke Self-Heal Retry
-        env:
-          LAMBDA_ENDPOINT: ${{ secrets.LAMBDA_ENDPOINT }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Invoke Retry Lambda
         run: |
-          cat > payload.json <<EOF
+          PAYLOAD=$(cat <<EOF
           {
             "error_id": "${{ steps.pr.outputs.error_id }}",
             "pr_number": "${{ steps.pr.outputs.pr_number }}",
-            "retry_limit": "${{ env.MAX_RETRIES }}"
+            "branch": "${{ github.event.workflow_run.head_branch }}",
+            "retry_limit": "${{ env.MAX_RETRIES }}",
+            "workflow_run_id": "${{ github.event.workflow_run.id }}"
           }
           EOF
+          )
 
           echo "Payload:"
-          cat payload.json
+          echo "$PAYLOAD"
 
-          curl -X POST "$LAMBDA_ENDPOINT" \
-            -H "Content-Type: application/json" \
-            -d @payload.json
+          aws lambda invoke \
+            --function-name post-pr-actions-trigger \
+            --payload "$PAYLOAD" \
+            --cli-binary-format raw-in-base64-out \
+            response.json
+
+          echo "Lambda Response:"
+          cat response.json
