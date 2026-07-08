@@ -3,13 +3,13 @@ name: Self Heal Retry
 on:
   workflow_run:
     workflows:
-      - Validate Auto Fix PR
+      - Validate Auto-Fix PR
     types:
       - completed
 
 jobs:
   retry:
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    if: github.event.workflow_run.conclusion == 'failure'
 
     runs-on: ubuntu-latest
 
