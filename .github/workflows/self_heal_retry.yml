@@ -1,0 +1,25 @@
+name: Self Heal Retry
+
+on:
+  workflow_run:
+    workflows:
+      - Validate Auto Fix PR
+    types:
+      - completed
+
+jobs:
+  retry:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run Self Heal
+        run: |
+          python run_self_heal.py
