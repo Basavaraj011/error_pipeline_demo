@@ -21,7 +21,7 @@ def compute_result(record):
 
     bonus = calculate_bonus(score)
     
-    final_score = score + int(bonus)
+    final_score = score + bonus
     bonus = calculate_bonus(score)
     final_score = score + int(bonus)
     return {
