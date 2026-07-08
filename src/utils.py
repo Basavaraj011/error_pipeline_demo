@@ -1,6 +1,6 @@
 import datetime
 
-bonus_factor = 1.5   # should be a float
+bonus_factor = "1.5"
 
 
 def log_message(msg):
@@ -12,7 +12,6 @@ def log_message(msg):
 
 def calculate_bonus(score):
 
-    # Ensure bonus_factor is a float for correct multiplication
     bonus = score * bonus_factor
     print("Bonus:", bonus)
     return bonus
