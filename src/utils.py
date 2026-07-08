@@ -13,7 +13,7 @@ def log_message(msg):
 def calculate_bonus(score):
 
     # Ensure bonus_factor is a float for correct multiplication
-    bonus = score * float(bonus_factor)
+    bonus = score * bonus_factor
     print("Bonus:", bonus)
     return bonus
 
