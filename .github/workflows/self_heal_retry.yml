@@ -56,28 +56,58 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Download Validation Logs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir logs
+      
+          gh run download \
+            ${{ github.event.workflow_run.id }} \
+            --name validation-logs \
+            --dir logs
+      
+          echo "Downloaded logs"
+          ls -R logs
+
+      - name: Read Validation Log
+        id: log
+        run: |
+          LOG_CONTENT=$(tail -500 logs/validation.log)
+      
+          {
+            echo "validation_log<<EOF"
+            echo "$LOG_CONTENT"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Create Payload
+        run: |
+          jq -n \
+            --arg error_id "${{ steps.pr.outputs.error_id }}" \
+            --arg pr_number "${{ steps.pr.outputs.pr_number }}" \
+            --arg branch "${{ github.event.workflow_run.head_branch }}" \
+            --arg workflow_run_id "${{ github.event.workflow_run.id }}" \
+            --arg ci_failure_reason "${{ steps.log.outputs.validation_log }}" \
+            '{
+              retry: true,
+              error_id: $error_id,
+              pr_number: $pr_number,
+              branch: $branch,
+              workflow_run_id: $workflow_run_id,
+              ci_failure_reason: $ci_failure_reason
+            }' > payload.json
+      
+          cat payload.json
+          
 
       - name: Invoke Retry Lambda
         run: |
-          PAYLOAD=$(cat <<EOF
-          {
-            "error_id": "${{ steps.pr.outputs.error_id }}",
-            "pr_number": "${{ steps.pr.outputs.pr_number }}",
-            "branch": "${{ github.event.workflow_run.head_branch }}",
-            "retry_limit": "${{ env.MAX_RETRIES }}",
-            "workflow_run_id": "${{ github.event.workflow_run.id }}"
-          }
-          EOF
-          )
-
-          echo "Payload:"
-          echo "$PAYLOAD"
-
           aws lambda invoke \
             --function-name post-pr-actions-trigger \
-            --payload "$PAYLOAD" \
+            --payload file://payload.json \
             --cli-binary-format raw-in-base64-out \
             response.json
-
-          echo "Lambda Response:"
+      
           cat response.json
