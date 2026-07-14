@@ -56,7 +56,22 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
-          
+
+      - name: Download PR Patch
+        id: patch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr diff ${{ steps.pr.outputs.pr_number }} > pr.patch
+      
+          PATCH_CONTENT=$(tail -1000 pr.patch)
+      
+          {
+            echo "pr_patch<<EOF"
+            cat pr.patch
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+    
       - name: Download Validation Logs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
