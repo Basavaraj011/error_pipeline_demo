@@ -66,16 +66,20 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api \
-            repos/${{ github.repository }}/pulls/${{ steps.pr.outputs.pr_number }} \
+          curl -L \
+            -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github.v3.diff" \
-            > pr.patch
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ steps.pr.outputs.pr_number }}" \
+            -o pr.patch
+      
+          echo "=== PATCH FILE ==="
+          ls -l pr.patch
       
           {
             echo "pr_patch<<EOF"
-            tail -500 pr.patch
+            cat pr.patch
             echo "EOF"
-          } >> $GITHUB_OUTPUT
+          } >> "$GITHUB_OUTPUT"
           
       - name: Get Validation Artifact
         id: artifact
