@@ -9,7 +9,7 @@ import sys
 
 def run_pipeline():
 
-
+    valid_data = validate_data(data)
     data = load_data("data.txt")
 
     valid_data = validate_data(data)
@@ -25,7 +25,7 @@ def main():
 
     try:
         run_pipeline()
-
+    except Exception:
     except Exception as e:
 
         print("\nPipeline crashed!\n")
