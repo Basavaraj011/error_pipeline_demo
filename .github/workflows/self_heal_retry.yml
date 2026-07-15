@@ -51,6 +51,10 @@ jobs:
           echo "TITLE=$TITLE"
           echo "ERROR_ID=$ERROR_ID"
 
+      - name: Debug Patch
+        run: |
+          cat pr.patch
+    
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
