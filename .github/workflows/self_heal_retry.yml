@@ -50,10 +50,6 @@ jobs:
           echo "PR_NUMBER=$PR_NUMBER"
           echo "TITLE=$TITLE"
           echo "ERROR_ID=$ERROR_ID"
-
-      - name: Debug Patch
-        run: |
-          cat pr.patch
     
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -66,14 +62,19 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          pwd
+      
           curl -L \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github.v3.diff" \
             "https://api.github.com/repos/${{ github.repository }}/pulls/${{ steps.pr.outputs.pr_number }}" \
             -o pr.patch
       
-          echo "=== PATCH FILE ==="
-          ls -l pr.patch
+          echo "==== FILES ===="
+          ls -la
+      
+          echo "==== PATCH EXISTS? ===="
+          test -f pr.patch && echo "YES" || echo "NO"
       
           {
             echo "pr_patch<<EOF"
