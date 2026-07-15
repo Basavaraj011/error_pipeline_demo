@@ -72,29 +72,36 @@ jobs:
             tail -500 pr.patch
             echo "EOF"
           } >> $GITHUB_OUTPUT
-    
+          
+      - name: Get Validation Artifact
+        id: artifact
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ARTIFACT_ID=$(gh api \
+            repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts \
+            --jq '.artifacts[] | select(.name=="validation-logs") | .id')
+      
+          echo "artifact_id=$ARTIFACT_ID" >> $GITHUB_OUTPUT
+
       - name: Download Validation Logs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mkdir logs
+          gh api \
+            repos/${{ github.repository }}/actions/artifacts/${{ steps.artifact.outputs.artifact_id }}/zip \
+            > validation-logs.zip
       
-          gh run download \
-            ${{ github.event.workflow_run.id }} \
-            --name validation-logs \
-            --dir logs
+          unzip validation-logs.zip -d logs
       
-          echo "Downloaded logs"
           ls -R logs
 
       - name: Read Validation Log
         id: log
         run: |
-          LOG_CONTENT=$(tail -500 logs/validation.log)
-      
           {
             echo "validation_log<<EOF"
-            echo "$LOG_CONTENT"
+            tail -500 logs/validation.log
             echo "EOF"
           } >> $GITHUB_OUTPUT
 
