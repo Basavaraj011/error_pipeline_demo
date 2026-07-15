@@ -62,14 +62,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api repos/${{ github.repository }}/pulls/${{ steps.pr.outputs.pr_number }} \
-          -H "Accept: application/vnd.github.v3.diff"
-      
-          PATCH_CONTENT=$(tail -1000 pr.patch)
+          gh api \
+            repos/${{ github.repository }}/pulls/${{ steps.pr.outputs.pr_number }} \
+            -H "Accept: application/vnd.github.v3.diff" \
+            > pr.patch
       
           {
             echo "pr_patch<<EOF"
-            cat pr.patch
+            tail -500 pr.patch
             echo "EOF"
           } >> $GITHUB_OUTPUT
     
