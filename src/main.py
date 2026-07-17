@@ -1,7 +1,6 @@
 import traceback
 
 from data_loader import load_data
-from data_validator import validate_data
 from processor import process_data
 from utils import log_message
 import sys
