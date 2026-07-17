@@ -9,7 +9,7 @@ import sys
 
 def run_pipeline():
 
-
+    valid_data = validate(data)
     data = load_data("data.txt")
 
     valid_data = validate_data(data)

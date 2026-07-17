@@ -1,7 +1,7 @@
 from utils import log_message
 
 
-def validate_data(data):
+def validate(data):
 
 
     valid = [] 
