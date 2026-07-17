@@ -122,6 +122,7 @@ jobs:
         run: |
           jq -n \
             --arg error_id "${{ steps.pr.outputs.error_id }}" \
+            --arg pr_id "${{ steps.pr.outputs.pr_id }}" \
             --arg pr_number "${{ steps.pr.outputs.pr_number }}" \
             --arg branch "${{ github.event.workflow_run.head_branch }}" \
             --arg workflow_run_id "${{ github.event.workflow_run.id }}" \
