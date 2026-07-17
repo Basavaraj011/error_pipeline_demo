@@ -8,7 +8,7 @@ def validate(data):
 
     for record in data:
 
-        if not is_valid_id(record):
+        if not is_valid_id(record:
             continue
 
         if not is_valid_name(record):
