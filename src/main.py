@@ -16,7 +16,6 @@ def run_pipeline():
     results = process_data(valid_data)
     for r in results:
         print("Processed:", r)
-    for r in results:
 
 
 def main():
