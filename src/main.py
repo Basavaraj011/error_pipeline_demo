@@ -11,7 +11,7 @@ def run_pipeline():
 
     data = load_data("data.txt")
 
-    valid_data = validate_data(data)
+    valid_data = [record for record in data if is_valid_record(record)]
 
     results = process_data(valid_data)
 
@@ -35,3 +35,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+def is_valid_record(record):
+    # Add validation logic here
+    return True
