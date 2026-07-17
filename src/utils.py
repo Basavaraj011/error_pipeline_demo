@@ -1,7 +1,7 @@
 import datetime
 
-bonus_factor = "1.5"
-bonus_factor = 1.5
+bonus_factor = float("1.5")
+
 def log_message(msg):
 
     time = datetime.datetime.now().strftime("%H:%M:%S")
