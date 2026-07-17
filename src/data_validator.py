@@ -10,7 +10,7 @@ def validate(data):
 
         if not is_valid_id(record):
             continue
-
+        
         if not is_valid_name(record):
             continue
 
@@ -24,7 +24,7 @@ def validate(data):
 
 def is_valid_id(record):
 
-    if record["id"] < 0:
+    if record.get("id", 0) < 0:
         return False
 
     return True
