@@ -9,7 +9,7 @@ import sys
 
 def run_pipeline():
 
-
+    valid_data = [record for record in data if is_valid_record(record)]
     data = load_data("data.txt")
 
     valid_data = [record for record in data if is_valid_record(record)]
@@ -37,6 +37,9 @@ def main():
 if __name__ == "__main__":
     main()
 
+def is_valid_record(record):
+    # Add validation logic here
+    return True
 def is_valid_record(record):
     # Add validation logic here
     return True
