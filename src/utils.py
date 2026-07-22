@@ -1,6 +1,6 @@
 import datetime
 
-bonus_factor = "1.5"
+bonus_factor = 1.5
 
 
 def log_message(msg):
