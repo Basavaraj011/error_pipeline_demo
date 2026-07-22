@@ -1,47 +1,29 @@
 import datetime
-
-bonus_factor = 1.5
-
-
-def log_message(msg):
-
-    time = datetime.datetime.now().strftime("%H:%M:%S")
-
+    results = []
+    for record in data:
+        result = compute_result(record)
+        results.append(result)
+    return results
     print(f"[{time}] {msg}")
+def compute_result(record):
+    score = record["score"]
+    bonus = calculate_bonus(score)
+    final_score = score + bonus
+    return {
+        "id": record["id"],
+        "name": record["name"],
+        "score": final_score
+    }
 
-
-def calculate_bonus(score):
-
-    bonus = score * bonus_factor
-    print("Bonus:", bonus)
-    return bonus
-
-def safe_divide(a, b):
-
-    if b == 0:
-        return 0
-
-    return a / b
-
-
-def format_name(name):
-
-    return name.strip().title()
-
-
-def debug_print(obj):
-
-    print("DEBUG:", obj)
-
-
-def calculate_average(values):
-
-    if not values:
-        return 0
-
+def summarize(results):
     total = 0
+    for r in results:
+        total += r["score"]
+    if len(results) == 0:
+        return 0
+    return total / len(results)
 
-    for v in values:
-        total += v
-
+    print("Processed Results")
+    for r in results:
+        print(r["id"], r["name"], r["score"])
     return total / len(values)

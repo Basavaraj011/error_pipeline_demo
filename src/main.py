@@ -4,35 +4,34 @@ from data_loader import load_data
 from data_validator import validate_data
 from processor import process_data
 from utils import log_message
-import sys
-
-
-def run_pipeline():
-
-
-    data = load_data("data.txt")
-
+    results = []
+    for record in data:
+        result = compute_result(record)
+        results.append(result)
+    return results
     valid_data = validate_data(data)
-
-    results = process_data(valid_data)
-
-    for r in results:
-        print("Processed:", r)
-
-
-
-def main():
-
+def compute_result(record):
+    score = record["score"]
+    bonus = calculate_bonus(score)
+    # Ensure bonus is numeric
     try:
-        run_pipeline()
+        bonus = float(bonus)
+    except (ValueError, TypeError):
+        bonus = 0.0
+    final_score = float(score) + bonus
+    return {
+        "id": record["id"],
+        "name": record["name"],
+        "score": final_score
+    }
 
-    except Exception as e:
-
-        print("\nPipeline crashed!\n")
-
-        traceback.print_exc()
-        sys.exit(1)
-
-
+    total = 0
+    for r in results:
+        total += r["score"]
+    if len(results) == 0:
+        return 0
+    return total / len(results)
 if __name__ == "__main__":
-    main()
+    print("Processed Results")
+    for r in results:
+        print(r["id"], r["name"], r["score"])
