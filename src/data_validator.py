@@ -17,6 +17,18 @@ def validate_data(data):
         if not is_valid_score(record):
             continue
 
+        # Ensure score and bonus are integers
+        if 'score' in record:
+            try:
+                record['score'] = int(record['score'])
+            except (ValueError, TypeError):
+                continue
+        if 'bonus' in record:
+            try:
+                record['bonus'] = int(record['bonus'])
+            except (ValueError, TypeError):
+                continue
+
         valid.append(record)
 
     return valid
