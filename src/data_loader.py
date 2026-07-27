@@ -32,7 +32,7 @@ def load_data(source):
     return cleaned
 
 
-def normalize_record(record):
+def normalize_record(record)
 
     new_record = {}
 
