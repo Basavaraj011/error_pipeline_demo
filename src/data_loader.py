@@ -39,6 +39,11 @@ def normalize_record(record):
     new_record["id"] = int(record["id"])
     new_record["name"] = record["name"].strip().lower()
     new_record["score"] = int(record["score"])
+    if "bonus" in record:
+        try:
+            new_record["bonus"] = int(record["bonus"])
+        except (ValueError, TypeError):
+            new_record["bonus"] = 0
 
     return new_record
 
