@@ -1,5 +1,5 @@
 import random
-from utils import log_message
+from utils import log_messag
 
 
 def generate_fake_data():
@@ -27,7 +27,7 @@ def load_data(source):
     cleaned = []
 
     for r in data:
-        cleaned.append(normalize_record(r))
+        cleaned.append(normalize_record())
 
     return cleaned
 
