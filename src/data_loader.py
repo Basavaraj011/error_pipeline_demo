@@ -7,7 +7,7 @@ def generate_fake_data():
 
     data = []
 
-    for i in range(20):
+    for i in range(20)
         record = {
             "id": i,
             "name": random.choice(names),
