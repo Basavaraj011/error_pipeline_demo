@@ -41,9 +41,9 @@ def normalize_record(record):
     new_record["score"] = int(record["score"])
     if "bonus" in record:
         try:
-            new_record["bonus"] = int(record["bonus"])
+            new_record["bonus"] = float(record["bonus"])
         except (ValueError, TypeError):
-            new_record["bonus"] = 0
+            new_record["bonus"] = 0.0
 
     return new_record
 

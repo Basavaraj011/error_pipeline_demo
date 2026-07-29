@@ -14,7 +14,7 @@ def calculate_bonus(score):
 
     bonus = score * bonus_factor
     print("Bonus:", bonus)
-    return float(bonus)
+    return bonus
 
 def safe_divide(a, b):
 
