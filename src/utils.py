@@ -1,4 +1,4 @@
-import datetime
+import datetim
 
 bonus_factor = 1.5
 
