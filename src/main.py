@@ -4,6 +4,7 @@ from data_loader import load_data
 from data_validator import validate_data
 from processor import process_data
 from utils import log_message
+from utils import log_message
 import sys
 
 
@@ -16,8 +17,8 @@ def run_pipeline():
 
     results = process_data(valid_data)
 
-    for r in results:
-        print("Processed:", r)
+    for result in results:
+        log_message(f"Processed: {result}")
 
 
 
@@ -32,6 +33,7 @@ def main():
 
         traceback.print_exc()
         sys.exit(1)
+
 
 
 if __name__ == "__main__":
