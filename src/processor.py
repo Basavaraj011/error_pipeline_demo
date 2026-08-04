@@ -19,7 +19,7 @@ def compute_result(record):
 
     score = record["score"]
 
-    bonus = calculate_bonus(score)
+    bonus = float(calculate_bonus(score))
     
     final_score = score + bonus
 
