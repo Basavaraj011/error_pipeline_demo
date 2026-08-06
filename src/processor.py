@@ -17,7 +17,7 @@ def process_data(data):
 
 def compute_result(record):
 
-    score = record["score"]
+    score = float(record["score"])
 
     bonus = calculate_bonus(score)
     
