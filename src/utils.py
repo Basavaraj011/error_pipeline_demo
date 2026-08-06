@@ -12,9 +12,9 @@ def log_message(msg):
 
 def calculate_bonus(score):
 
-    bonus = score * bonus_factor
-    print("Bonus:", bonus)
-    return bonus
+bonus = float(score) * float(bonus_factor)
+print("Bonus:", bonus)
+return bonus
 
 def safe_divide(a, b):
 
