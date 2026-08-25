@@ -3,7 +3,7 @@ import datetime
 bonus_factor = 1.5
 
 
-def log_message(msg:
+def log_message(msg):
 
     time = datetime.datetime.now().strftime("%H:%M:%S")
 
